@@ -9,16 +9,19 @@ jobs:
         runs-on: ubuntu-20.04
         container: antriver/php:7.0.33
         steps:
+            -   name: test
+                run: pwd; ls -la
             -   name: Composer install
                 run: composer install
             -   name: Run tests
                 run: composer test
-    test-php8:
-        name: Run tests on PHP 8.0.12
-        runs-on: ubuntu-20.04
-        container: antriver/php:8.0.12
-        steps:
-            -   name: Composer install
-                run: composer install
-            -   name: Run tests
-                run: composer test
+
+#    test-php8:
+#        name: Run tests on PHP 8.0.12
+#        runs-on: ubuntu-20.04
+#        container: antriver/php:8.0.12
+#        steps:
+#            -   name: Composer install
+#                run: composer install
+#            -   name: Run tests
+#                run: composer test
