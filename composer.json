@@ -1,0 +1,33 @@
+{
+    "name": "digitickets/generic-api-client",
+    "description": "Interface for making request to an API.",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "DigiTickets",
+            "email": "developers@digitickets.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "GenericApiClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GenericApiClientTests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^7.0.0",
+        "guzzlehttp/guzzle": "^6.2|^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6",
+        "vlucas/phpdotenv": "^4.2"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit tests --colors"
+    }
+}
