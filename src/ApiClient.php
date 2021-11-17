@@ -19,12 +19,12 @@ class ApiClient
     /**
      * @var string
      */
-    private $apiRootUrl;
+    protected $apiRootUrl;
 
     /**
      * @var Client
      */
-    private $guzzleClient;
+    protected $guzzleClient;
 
     public function __construct(
         string $apiUrl
