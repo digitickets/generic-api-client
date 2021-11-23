@@ -87,6 +87,18 @@ class ApiClientE2ETest extends AbstractTestCase
         $this->assertGreaterThan(0, count($result['headers']));
     }
 
+    public function testGetData()
+    {
+        $apiClient = $this->makeApiClient();
+        $result = $apiClient->getData('get');
+
+        $this->assertGreaterThan(0, count($result['headers']));
+
+        $response = $apiClient->getLastResponse();
+        $result2 = $apiClient->parseResponse($response);
+        $this->assertEquals($result2, $result);
+    }
+
     public function testGetWithQueryParameters()
     {
         $apiClient = $this->makeApiClient();
@@ -107,6 +119,15 @@ class ApiClientE2ETest extends AbstractTestCase
         $apiClient = $this->makeApiClient();
         $response = $apiClient->post('post', ['name' => 'Savannah', 'job' => 'Cat']);
         $result = $apiClient->parseResponse($response);
+
+        $this->assertSame('Savannah', $result['form']['name']);
+        $this->assertSame('Cat', $result['form']['job']);
+    }
+
+    public function testPostData()
+    {
+        $apiClient = $this->makeApiClient();
+        $result = $apiClient->postData('post', ['name' => 'Savannah', 'job' => 'Cat']);
 
         $this->assertSame('Savannah', $result['form']['name']);
         $this->assertSame('Cat', $result['form']['job']);

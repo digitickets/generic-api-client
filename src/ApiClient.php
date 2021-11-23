@@ -3,10 +3,10 @@
 namespace GenericApiClient;
 
 use GenericApiClient\Consts\Request;
+use GenericApiClient\Exceptions\ApiErrorException;
 use GenericApiClient\Exceptions\MalformedApiResponseException;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 class ApiClient
@@ -25,6 +25,11 @@ class ApiClient
      * @var Client
      */
     protected $guzzleClient;
+
+    /**
+     * @var ResponseInterface|null
+     */
+    protected $lastResponse;
 
     public function __construct(
         string $apiUrl
@@ -97,13 +102,50 @@ class ApiClient
             $body
         );
 
-        return $this->guzzleClient->send(
+        $response = $this->guzzleClient->send(
             $request,
             [
                 // Don't throw exceptions for "bad" responses. Return them as a response object.
                 RequestOptions::HTTP_ERRORS => false,
             ]
         );
+
+        $this->lastResponse = $response;
+
+        return $response;
+    }
+
+    /**
+     * Does the same thing as request() but returns the array of data instead of the Response object.
+     * Throws an exception for non-200 responses.
+     * You can get the Response object by calling getLastResponse().
+     *
+     * @param string $method
+     * @param string $endpoint
+     * @param array $bodyParameters
+     * @param array $queryParameters
+     * @param array $headers
+     *
+     * @return array
+     * @throws ApiErrorException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function requestData(
+        string $method,
+        string $endpoint,
+        array $bodyParameters = [],
+        array $queryParameters = [],
+        array $headers = []
+    ): array {
+        $response = $this->request($method, $endpoint, $bodyParameters, $queryParameters, $headers);
+
+        $result = $this->parseResponse($response);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new ApiErrorException($response, $result);
+        }
+
+        return $result;
     }
 
     public function get(
@@ -112,6 +154,14 @@ class ApiClient
         array $headers = []
     ): ResponseInterface {
         return $this->request(Request::METHOD_GET, $endpoint, [], $queryParameters, $headers);
+    }
+
+    public function getData(
+        string $endpoint,
+        array $queryParameters = [],
+        array $headers = []
+    ): array {
+        return $this->requestData(Request::METHOD_GET, $endpoint, [], $queryParameters, $headers);
     }
 
     public function post(
@@ -123,6 +173,15 @@ class ApiClient
         return $this->request(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
+    public function postData(
+        string $endpoint,
+        array $bodyParameters = [],
+        array $queryParameters = [],
+        array $headers = []
+    ): array {
+        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
+    }
+
     public function put(
         string $endpoint,
         array $bodyParameters = [],
@@ -130,6 +189,15 @@ class ApiClient
         array $headers = []
     ): ResponseInterface {
         return $this->request(Request::METHOD_PUT, $endpoint, $bodyParameters, $queryParameters, $headers);
+    }
+
+    public function putData(
+        string $endpoint,
+        array $bodyParameters = [],
+        array $queryParameters = [],
+        array $headers = []
+    ): array {
+        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
     public function patch(
@@ -141,6 +209,15 @@ class ApiClient
         return $this->request(Request::METHOD_PATCH, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
+    public function patchData(
+        string $endpoint,
+        array $bodyParameters = [],
+        array $queryParameters = [],
+        array $headers = []
+    ): array {
+        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
+    }
+
     public function delete(
         string $endpoint,
         array $bodyParameters = [],
@@ -148,6 +225,15 @@ class ApiClient
         array $headers = []
     ): ResponseInterface {
         return $this->request(Request::METHOD_DELETE, $endpoint, $bodyParameters, $queryParameters, $headers);
+    }
+
+    public function deleteData(
+        string $endpoint,
+        array $bodyParameters = [],
+        array $queryParameters = [],
+        array $headers = []
+    ): array {
+        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
     /**
@@ -160,16 +246,14 @@ class ApiClient
      */
     public function parseResponse(ResponseInterface $response): array
     {
-        try {
-            return \GuzzleHttp\json_decode($response->getBody(), true);
-        } catch (InvalidArgumentException $e) {
-            // Re-throwing the same exception but containing the response so the problem can be debugged.
-            throw new MalformedApiResponseException(
-                $response,
-                rtrim($e->getMessage(), '.').". Response body:\n".$response->getBody(),
-                $e->getCode(),
-                $e
-            );
-        }
+        return JsonParser::parseJsonResponse($response);
+    }
+
+    /**
+     * @return ResponseInterface|null
+     */
+    public function getLastResponse()
+    {
+        return $this->lastResponse;
     }
 }
