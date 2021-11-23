@@ -33,6 +33,10 @@ print_r($dogs);
 
 ## Testing
 
+To install on PHP 8:
+
+    composer install --ignore-platform-reqs
+
 To run tests:
 
     composer test
