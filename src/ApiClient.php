@@ -35,7 +35,23 @@ class ApiClient
         string $apiUrl
     ) {
         $this->guzzleClient = new Client();
-        $this->apiRootUrl = $apiUrl;
+        $this->setApiRootUrl($apiUrl);
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiRootUrl(): string
+    {
+        return $this->apiRootUrl;
+    }
+
+    /**
+     * @param string $apiRootUrl
+     */
+    protected function setApiRootUrl(string $apiRootUrl)
+    {
+        $this->apiRootUrl = rtrim($apiRootUrl, '/').'/';
     }
 
     /**

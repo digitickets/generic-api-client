@@ -171,4 +171,39 @@ class ApiClientE2ETest extends AbstractTestCase
 
         $this->assertSame('Savannah', $result['form']['cat']);
     }
+
+    public function dataForTestSetApiRootUrlHandlesTrailingSlashes()
+    {
+        return [
+            [
+                'url' => 'https://example.com',
+                'expect' => 'https://example.com/',
+            ],
+            [
+                'url' => 'https://example.com/',
+                'expect' => 'https://example.com/',
+            ],
+            [
+                'url' => 'https://example.com///',
+                'expect' => 'https://example.com/',
+            ],
+            [
+                'url' => '',
+                'expect' => '/',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataForTestSetApiRootUrlHandlesTrailingSlashes
+     *
+     * @param string $url
+     * @param string $expect
+     */
+    public function testSetApiRootUrlHandlesTrailingSlashes(string $url, string $expect)
+    {
+        $apiClient = new ApiClient($url);
+
+        $this->assertSame($expect, $apiClient->getApiRootUrl());
+    }
 }
