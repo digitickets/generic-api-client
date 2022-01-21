@@ -98,7 +98,7 @@ class ApiClient
         $url = rtrim($this->apiRootUrl, '/').'/'.ltrim($endpoint, '/');
 
         $queryParameters = array_merge(
-            $this->defaultQueryParameters,
+            $this->getDefaultQueryParameters(),
             $queryParameters
         );
 

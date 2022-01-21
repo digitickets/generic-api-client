@@ -4,6 +4,10 @@ namespace GenericApiClientTests;
 
 use GenericApiClient\ApiClient;
 use GenericApiClient\Exceptions\MalformedApiResponseException;
+use GenericApiClientTests\Fixtures\ApiClientWithCustomQueryParametersFixture;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class ApiClientE2ETest extends AbstractTestCase
@@ -106,7 +110,7 @@ class ApiClientE2ETest extends AbstractTestCase
         $response = $apiClient->get(
             'get',
             [
-                'orderBy' => 'ref'
+                'orderBy' => 'ref',
             ]
         );
         $result = $apiClient->parseResponse($response);
@@ -205,5 +209,41 @@ class ApiClientE2ETest extends AbstractTestCase
         $apiClient = new ApiClient($url);
 
         $this->assertSame($expect, $apiClient->getApiRootUrl());
+    }
+
+    /**
+     * Test that a getDefaultQueryParameters function is called for every request, so unique values are
+     * returned each time.
+     */
+    public function testVariableDefaultQueryParameters()
+    {
+        $apiClient = new ApiClientWithCustomQueryParametersFixture('https://example.com');
+
+        $queries = [];
+
+        $mockGuzzleClient = $this->createMock(Client::class);
+        $mockGuzzleClient
+            ->method('send')
+            ->will(
+                $this->returnCallback(
+                    function (RequestInterface $request, array $opts) use (&$queries) {
+                        $queries[] = $request->getUri()->getQuery();
+
+                        return new Response();
+                    }
+                )
+            );
+
+        $apiClient->setGuzzleClient($mockGuzzleClient);
+
+        $apiClient->get('/test');
+        usleep(100);
+        $apiClient->get('/test');#
+        usleep(100);
+        $apiClient->get('/test');
+
+        $this->assertCount(3, $queries);
+        $this->assertNotFalse(stripos($queries[0], 'time=1'));
+        $this->assertCount(3, array_unique($queries));
     }
 }
