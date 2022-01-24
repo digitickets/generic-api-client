@@ -213,7 +213,7 @@ class ApiClient
         array $queryParameters = [],
         array $headers = []
     ): array {
-        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
+        return $this->requestData(Request::METHOD_PUT, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
     public function patch(
@@ -231,7 +231,7 @@ class ApiClient
         array $queryParameters = [],
         array $headers = []
     ): array {
-        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
+        return $this->requestData(Request::METHOD_PATCH, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
     public function delete(
@@ -249,7 +249,7 @@ class ApiClient
         array $queryParameters = [],
         array $headers = []
     ): array {
-        return $this->requestData(Request::METHOD_POST, $endpoint, $bodyParameters, $queryParameters, $headers);
+        return $this->requestData(Request::METHOD_DELETE, $endpoint, $bodyParameters, $queryParameters, $headers);
     }
 
     /**
