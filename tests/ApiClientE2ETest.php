@@ -246,4 +246,15 @@ class ApiClientE2ETest extends AbstractTestCase
         $this->assertNotFalse(stripos($queries[0], 'time=1'));
         $this->assertCount(3, array_unique($queries));
     }
+
+    public function testDefaultHeader()
+    {
+        $apiClient = $this->makeApiClient();
+        $apiClient->addDefaultHeader('x-hello', 'world');
+
+        $response = $apiClient->get('get');
+        $result = $apiClient->parseResponse($response);
+
+        $this->assertSame('world', $result['headers']['x-hello']);
+    }
 }

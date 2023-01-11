@@ -17,6 +17,11 @@ class ApiClient
     protected $defaultQueryParameters = [];
 
     /**
+     * @var string[]
+     */
+    protected $defaultHeaders = [];
+
+    /**
      * @var string
      */
     protected $apiRootUrl;
@@ -73,6 +78,24 @@ class ApiClient
     }
 
     /**
+     * @return string[]
+     */
+    public function getDefaultHeaders(): array
+    {
+        return $this->defaultHeaders;
+    }
+
+    public function addDefaultHeader(string $name, string $value)
+    {
+        $this->defaultHeaders[$name] = $value;
+    }
+
+    public function removeDefaultHeader(string $name)
+    {
+        unset($this->defaultHeaders[$name]);
+    }
+
+    /**
      * Makes a request to the API and returns the response. The returned value is a PSR ResponseInterface, so that you
      * can access the status and headers of the response too.
      * To access the actual data pass that response to $this->parseResponse().
@@ -100,6 +123,11 @@ class ApiClient
         $queryParameters = array_merge(
             $this->getDefaultQueryParameters(),
             $queryParameters
+        );
+
+        $headers = array_merge(
+            $this->getDefaultHeaders(),
+            $headers
         );
 
         if ($method === Request::METHOD_GET) {
