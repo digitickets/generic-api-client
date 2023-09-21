@@ -56,6 +56,7 @@ class ApiClient
      */
     protected function setApiRootUrl(string $apiRootUrl)
     {
+        // Ensure there is one trailing slash at the end of the URL.
         $this->apiRootUrl = rtrim($apiRootUrl, '/').'/';
     }
 
@@ -118,7 +119,8 @@ class ApiClient
         array $headers = []
     ): ResponseInterface {
         // Allow leading or no leading slash in the provided endpoint.
-        $url = rtrim($this->apiRootUrl, '/').'/'.ltrim($endpoint, '/');
+        // The apiRootUrl will already have been sanitized to end in a trailing slash.
+        $url = $this->getApiRootUrl().ltrim($endpoint, '/');
 
         $queryParameters = array_merge(
             $this->getDefaultQueryParameters(),
