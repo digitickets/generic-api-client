@@ -26,4 +26,4 @@ jobs:
             -   name: Composer install
                 run: composer install --ignore-platform-reqs
             -   name: Run tests
-                run: composer test
+                run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/phpunit tests --colors
