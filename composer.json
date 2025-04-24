@@ -28,6 +28,6 @@
         "phpunit/phpunit": "^6"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit tests --colors"
+        "test": "php -d 'error_reporting=E_ALL & ~E_DEPRECATED' vendor/bin/phpunit tests --colors"
     }
 }

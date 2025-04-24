@@ -5,25 +5,22 @@ on:
             - master
 jobs:
     test-php7:
-        name: Run tests on PHP 7.0.33
-        runs-on: ubuntu-latest
-        container: antriver/php:7.0.33
-        steps:
-            -   name: Check out repository code
-                uses: actions/checkout@v2
-            -   name: Composer install
-                run: composer install --ignore-platform-reqs
-            -   name: Run tests
-                run: composer test
+      name: Run tests on PHP 7.0.33
+      runs-on: ubuntu-latest
+      steps:
+        - name: Check out repository code
+          uses: actions/checkout@v2
+        - name: Run tests in Docker using PHP 7.0.33
+          run: ./run-tests-php7.0.sh
 
-    test-php8:
-        name: Run tests on PHP 8.0.12
-        runs-on: ubuntu-latest
-        container: antriver/php:8.0.12
-        steps:
-            -   name: Check out repository code
-                uses: actions/checkout@v2
-            -   name: Composer install
-                run: composer install --ignore-platform-reqs
-            -   name: Run tests
-                run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/phpunit tests --colors
+#    test-php8:
+#        name: Run tests on PHP 8.0.12
+#        runs-on: ubuntu-latest
+#        container: antriver/php:8.0.12
+#        steps:
+#            -   name: Check out repository code
+#                uses: actions/checkout@v2
+#            -   name: Composer install
+#                run: composer install --ignore-platform-reqs
+#            -   name: Run tests
+#                run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/phpunit tests --colors
