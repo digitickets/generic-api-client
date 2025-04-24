@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker run --rm -it \
+docker run --rm \
   -v "$PWD":/app \
   -w /app \
   antriver/php:8.0.12 bash -c "\
