@@ -134,9 +134,19 @@ class ApiClient
 
         if ($method === Request::METHOD_GET) {
             $body = null;
-        } else {
+        } elseif (empty($headers['content-type']) && empty($headers['Content-Type'])) {
             $headers['content-type'] = 'application/x-www-form-urlencoded';
-            $body = http_build_query($bodyParameters);
+        }
+        $contentType = $headers['content-type'] ?? $headers['Content-Type'] ?? null;
+        switch ($contentType) {
+            case 'application/x-www-form-urlencoded':
+                $body = http_build_query($bodyParameters);
+                break;
+            case 'application/json':
+                $body = json_encode($bodyParameters);
+                break;
+            default:
+                $body = null;
         }
 
         $url .= (strpos($url, '?') !== false ? '&' : '?').http_build_query($queryParameters);
