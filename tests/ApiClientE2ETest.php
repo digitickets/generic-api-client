@@ -66,11 +66,9 @@ class ApiClientE2ETest extends AbstractTestCase
      */
     public function testNonJsonEndpointReturnsResponseInException()
     {
-        $response = null;
-
         try {
             // Create an API client to access the unversioned API root.
-            $apiClient = new ApiClient('https://utils.anthonykuske.com/');
+            $apiClient = new ApiClient('https://downloads.dtapps.co.uk');
             // This is a response that just contains some text.
             $response = $apiClient->get('test.txt');
             $apiClient->parseResponse($response);
