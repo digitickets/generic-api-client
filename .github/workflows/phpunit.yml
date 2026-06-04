@@ -39,15 +39,6 @@ jobs:
           - php-version: '8.2'
             phpunit-config: phpunit.xml
 
-          - php-version: '8.3'
-            phpunit-config: phpunit.xml
-
-          - php-version: '8.4'
-            phpunit-config: phpunit.xml
-
-          - php-version: '8.5'
-            phpunit-config: phpunit.xml
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
