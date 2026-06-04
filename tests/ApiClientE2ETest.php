@@ -202,7 +202,6 @@ class ApiClientE2ETest extends AbstractTestCase
      * @param string $url
      * @param string $expect
      */
-    #[DataProvider('dataForTestSetApiRootUrlHandlesTrailingSlashes')]
     public function testSetApiRootUrlHandlesTrailingSlashes(string $url, string $expect)
     {
         $apiClient = new ApiClient($url);
