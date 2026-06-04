@@ -174,7 +174,7 @@ class ApiClientE2ETest extends AbstractTestCase
         $this->assertSame('Savannah', $result['form']['cat']);
     }
 
-    public function dataForTestSetApiRootUrlHandlesTrailingSlashes()
+    public static function dataForTestSetApiRootUrlHandlesTrailingSlashes(): array
     {
         return [
             [
@@ -202,6 +202,7 @@ class ApiClientE2ETest extends AbstractTestCase
      * @param string $url
      * @param string $expect
      */
+    #[DataProvider('dataForTestSetApiRootUrlHandlesTrailingSlashes')]
     public function testSetApiRootUrlHandlesTrailingSlashes(string $url, string $expect)
     {
         $apiClient = new ApiClient($url);
