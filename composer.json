@@ -1,6 +1,6 @@
 {
   "name": "digitickets/generic-api-client",
-  "description": "Interface for making request to an API.",
+  "description": "Generic interface for making requests to an API.",
   "license": "MIT",
   "type": "library",
   "authors": [
