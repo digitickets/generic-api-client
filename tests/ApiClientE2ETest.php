@@ -55,7 +55,7 @@ class ApiClientE2ETest extends AbstractTestCase
         $this->expectException(MalformedApiResponseException::class);
         $this->expectExceptionMessage("json_decode error: Syntax error");
 
-        $apiClient = new ApiClient('https://utils.anthonykuske.com/');
+        $apiClient = new ApiClient('https://downloads.dtapps.co.uk');
         // This is a response that just contains some text.
         $response = $apiClient->get('test.txt');
         $apiClient->parseResponse($response);
